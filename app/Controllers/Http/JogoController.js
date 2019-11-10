@@ -4,89 +4,58 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with jogos
- */
+const Jogo = use('App/Models/Jogo')
+
 class JogoController {
-  /**
-   * Show a list of all jogos.
-   * GET jogos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const jogos = await Jogo.all()
+
+    return jogos
   }
 
-  /**
-   * Render a form to be used for creating a new jogo.
-   * GET jogos/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only([
+      "campeonato_id",
+      "bolao_id",
+      "rodada",
+      "inicio",
+      "timecasa_id",
+      "placar_casa",
+      "placar_fora",
+      "timefora_id"
+    ])
+
+    const jogo = await Jogo.create(data)
+
+    return jogo
   }
 
-  /**
-   * Create/save a new jogo.
-   * POST jogos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const jogo = await Jogo.findOrFail(params.id)
+
+    return jogo
   }
 
-  /**
-   * Display a single jogo.
-   * GET jogos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const jogo = await Jogo.findOrFail(params.id)
+
+    jogo.campeonato_id = request.input('campeonato_id', jogo.campeonato_id)
+    jogo.bolao_id = request.input('bolao_id', jogo.bolao_id)
+    jogo.rodada = request.input('rodada', jogo.rodada)
+    jogo.inicio = request.input('inicio', jogo.inicio)
+    jogo.timecasa_id = request.input('timecasa_id', jogo.timecasa_id)
+    jogo.placar_casa = request.input('placar_casa', jogo.placar_casa)
+    jogo.placar_fora = request.input('placar_fora', jogo.placar_fora)
+    jogo.timefora_id = request.input('timefora_id', jogo.timefora_id)
+    await jogo.save()
+
+    return jogo
   }
 
-  /**
-   * Render a form to update an existing jogo.
-   * GET jogos/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const jogo = await Jogo.findOrFail(params.id)
 
-  /**
-   * Update jogo details.
-   * PUT or PATCH jogos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a jogo with id.
-   * DELETE jogos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return jogo.delete()
   }
 }
 

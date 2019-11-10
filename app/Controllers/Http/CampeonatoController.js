@@ -4,89 +4,64 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with campeonatoes
- */
+const Campeonato = use('App/Models/Campeonato')
+
 class CampeonatoController {
-  /**
-   * Show a list of all campeonatoes.
-   * GET campeonatoes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const campeonatos = await Campeonato.all()
+
+    return campeonatos
   }
 
-  /**
-   * Render a form to be used for creating a new campeonato.
-   * GET campeonatoes/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only([
+      "nome",
+      "nome_completo",
+      "qtd_times",
+      "qtd_rodadas",
+      "rodada",
+      "temporada",
+      "serie",
+      "estado",
+      "pais",
+      "inicio",
+      "termino"
+    ])
+
+    const campeonato = await Campeonato.create(data)
+
+    return campeonato
   }
 
-  /**
-   * Create/save a new campeonato.
-   * POST campeonatoes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const campeonato = await Campeonato.findOrFail(params.id)
+
+    return campeonato
   }
 
-  /**
-   * Display a single campeonato.
-   * GET campeonatoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const campeonato = await Campeonato.findOrFail(params.id)
+
+    campeonato.nome = request.input('nome', campeonato.nome)
+    campeonato.nome_completo = request.input('nome_completo', campeonato.nome_completo)
+    campeonato.qtd_times = request.input('qtd_times', campeonato.qtd_times)
+    campeonato.qtd_rodadas = request.input('qtd_rodadas', campeonato.qtd_rodadas)
+    campeonato.rodada = request.input('rodada', campeonato.rodada)
+    campeonato.temporada = request.input('temporada', campeonato.temporada)
+    campeonato.serie = request.input('serie', campeonato.serie)
+    campeonato.estado = request.input('estado', campeonato.estado)
+    campeonato.pais = request.input('pais', campeonato.pais)
+    campeonato.inicio = request.input('inicio', campeonato.inicio)
+    campeonato.termino = request.input('termino', campeonato.termino)
+    await campeonato.save()
+
+    return campeonato
   }
 
-  /**
-   * Render a form to update an existing campeonato.
-   * GET campeonatoes/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const campeonato = await Campeonato.findOrFail(params.id)
 
-  /**
-   * Update campeonato details.
-   * PUT or PATCH campeonatoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a campeonato with id.
-   * DELETE campeonatoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return campeonato.delete()
   }
 }
 

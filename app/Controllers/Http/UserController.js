@@ -8,7 +8,7 @@ const User = use("App/Models/User");
 
 class UserController {
   async index () {
-    const users = User.all()
+    const users = await User.all()
 
     return users
   }
@@ -35,9 +35,9 @@ class UserController {
     user.master = request.input('master', user.master)
     user.password = request.input('password', user.password)
     user.username = request.input('username', user.username)
-    user.save()
+    await user.save()
 
-    return User.find(params.id)
+    return user
   }
 
   async destroy ({ params, request, response }) {

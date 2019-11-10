@@ -4,89 +4,47 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with times
- */
+const Time = use('App/Models/Time')
+
 class TimeController {
-  /**
-   * Show a list of all times.
-   * GET times
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const times = await Time.all()
+
+    return times
   }
 
-  /**
-   * Render a form to be used for creating a new time.
-   * GET times/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only(["nome", "nome_completo", "sigla", "estadio", "estado", "pais"])
+
+    const time = await Time.create(data)
+
+    return time
   }
 
-  /**
-   * Create/save a new time.
-   * POST times
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const time = await Time.findOrFail(params.id)
+
+    return time
   }
 
-  /**
-   * Display a single time.
-   * GET times/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const time = await Time.findOrFail(params.id)
+
+    time.nome = request.input('nome', time.nome)
+    time.nome_completo = request.input('nome_completo', time.nome_completo)
+    time.sigla = request.input('sigla', time.sigla)
+    time.estadio = request.input('estadio', time.estadio)
+    time.estado = request.input('estado', time.estado)
+    time.pais = request.input('pais', time.pais)
+    await time.save()
+
+    return time
   }
 
-  /**
-   * Render a form to update an existing time.
-   * GET times/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const time = await Time.findOrFail(params.id)
 
-  /**
-   * Update time details.
-   * PUT or PATCH times/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a time with id.
-   * DELETE times/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return time.delete()
   }
 }
 

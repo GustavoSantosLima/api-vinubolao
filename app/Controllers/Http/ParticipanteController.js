@@ -4,89 +4,52 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with participantes
- */
+const Participante = use('App/Models/Participante')
+
 class ParticipanteController {
-  /**
-   * Show a list of all participantes.
-   * GET participantes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const participantes = await Participante.all()
+
+    return participantes
   }
 
-  /**
-   * Render a form to be used for creating a new participante.
-   * GET participantes/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only([
+      "user_id",
+      "bolao_id",
+      "pontosganhos",
+      "placarexato",
+      "placarvencedor"
+    ])
+
+    const participante = await Participante.create(data)
+
+    return participante
   }
 
-  /**
-   * Create/save a new participante.
-   * POST participantes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const participante = await Participante.findOrFail(params.id)
+
+    return participante
   }
 
-  /**
-   * Display a single participante.
-   * GET participantes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const participante = await Participante.findOrFail(params.id)
+
+    participante.user_id = request.input('user_id', participante.user_id)
+    participante.bolao_id = request.input('bolao_id', participante.bolao_id)
+    participante.pontosganhos = request.input('pontosganhos', participante.pontosganhos)
+    participante.placarexato = request.input('placarexato', participante.placarexato)
+    participante.placarvencedor = request.input('placarvencedor', participante.placarvencedor)
+    await participante.save()
+
+    return participante
   }
 
-  /**
-   * Render a form to update an existing participante.
-   * GET participantes/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const participante = await Participante.findOrFail(params.id)
 
-  /**
-   * Update participante details.
-   * PUT or PATCH participantes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a participante with id.
-   * DELETE participantes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return participante.delete()
   }
 }
 

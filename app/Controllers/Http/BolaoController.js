@@ -4,89 +4,60 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with bolaos
- */
+const Bolao = use('App/Models/Bolao')
+
 class BolaoController {
-  /**
-   * Show a list of all bolaos.
-   * GET bolaos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const boloes = await Bolao.all()
+
+    return boloes
   }
 
-  /**
-   * Render a form to be used for creating a new bolao.
-   * GET bolaos/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only([
+      "user_id",
+      "campeonato_id",
+      "nome",
+      "descricao",
+      "placar_exato",
+      "placar_vencedor",
+      "rodada_dobro",
+      "ativo",
+      "inicio"
+    ])
+
+    const bolao = await Bolao.create(data)
+
+    return bolao
   }
 
-  /**
-   * Create/save a new bolao.
-   * POST bolaos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const bolao = await Bolao.findOrFail(params.id)
+
+    return bolao
   }
 
-  /**
-   * Display a single bolao.
-   * GET bolaos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const bolao = await Bolao.findOrFail(params.id)
+
+    bolao.user_id = request.input('user_id', bolao.user_id)
+    bolao.campeonato_id = request.input('campeonato_id', bolao.campeonato_id)
+    bolao.nome = request.input('nome', bolao.nome)
+    bolao.descricao = request.input('descricao', bolao.descricao)
+    bolao.placar_exato = request.input('placar_exato', bolao.placar_exato)
+    bolao.placar_vencedor = request.input('placar_vencedor', bolao.placar_vencedor)
+    bolao.rodada_dobro = request.input('rodada_dobro', bolao.rodada_dobro)
+    bolao.ativo = request.input('ativo', bolao.ativo)
+    bolao.inicio = request.input('inicio', bolao.inicio)
+    await bolao.save()
+
+    return bolao
   }
 
-  /**
-   * Render a form to update an existing bolao.
-   * GET bolaos/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const bolao = await Bolao.findOrFail(params.id)
 
-  /**
-   * Update bolao details.
-   * PUT or PATCH bolaos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a bolao with id.
-   * DELETE bolaos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return bolao.delete()
   }
 }
 

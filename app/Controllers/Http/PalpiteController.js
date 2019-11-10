@@ -4,89 +4,52 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with palpites
- */
+const Palpite = use('App/Models/Palpite')
+
 class PalpiteController {
-  /**
-   * Show a list of all palpites.
-   * GET palpites
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+  async index () {
+    const palpites = await Palpite.all()
+
+    return palpites
   }
 
-  /**
-   * Render a form to be used for creating a new palpite.
-   * GET palpites/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store ({ request }) {
+    const data = request.only([
+      "jogo_id",
+      "user_id",
+      "palpite_casa",
+      "palpite_fora",
+      "horario"
+    ])
+
+    const palpite = await Palpite.create(data)
+
+    return palpite
   }
 
-  /**
-   * Create/save a new palpite.
-   * POST palpites
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
+  async show ({ params }) {
+    const palpite = await Palpite.findOrFail(params.id)
+
+    return palpite
   }
 
-  /**
-   * Display a single palpite.
-   * GET palpites/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+  async update ({ params, request }) {
+    const palpite = await Palpite.findOrFail(params.id)
+
+    palpite.jogo_id = request.input('jogo_id', palpite.jogo_id)
+    palpite.user_id = request.input('user_id', palpite.user_id)
+    palpite.palpite_casa = request.input('palpite_casa', palpite.palpite_casa)
+    palpite.palpite_fora = request.input('palpite_fora', palpite.palpite_fora)
+    palpite.horario = request.input('horario', palpite.horario)
+    await palpite.save()
+
+    return palpite
   }
 
-  /**
-   * Render a form to update an existing palpite.
-   * GET palpites/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+  async destroy ({ params }) {
+    const palpite = await Palpite.findOrFail(params.id)
 
-  /**
-   * Update palpite details.
-   * PUT or PATCH palpites/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a palpite with id.
-   * DELETE palpites/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return palpite.delete()
   }
 }
 
