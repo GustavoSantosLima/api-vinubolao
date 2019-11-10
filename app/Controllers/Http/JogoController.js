@@ -8,7 +8,8 @@ const Jogo = use('App/Models/Jogo')
 
 class JogoController {
   async index () {
-    const jogos = await Jogo.all()
+    const jogos = await Jogo.query().with('bolao')
+    .with('campeonato').with('mandante').with('visitante').fetch()
 
     return jogos
   }
@@ -31,7 +32,8 @@ class JogoController {
   }
 
   async show ({ params }) {
-    const jogo = await Jogo.findOrFail(params.id)
+    const jogo = await Jogo.query().with('bolao').with('campeonato')
+    .with('mandante').with('visitante').where('id', params.id).firstOrFail()
 
     return jogo
   }

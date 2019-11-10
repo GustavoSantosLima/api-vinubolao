@@ -8,7 +8,7 @@ const Bolao = use('App/Models/Bolao')
 
 class BolaoController {
   async index () {
-    const boloes = await Bolao.all()
+    const boloes = await Bolao.query().with('user').with('campeonato').fetchOrFail()
 
     return boloes
   }
@@ -32,7 +32,7 @@ class BolaoController {
   }
 
   async show ({ params }) {
-    const bolao = await Bolao.findOrFail(params.id)
+    const bolao = await Bolao.query().with('user').with('campeonato').where('id', params.id).firstOrFail()
 
     return bolao
   }

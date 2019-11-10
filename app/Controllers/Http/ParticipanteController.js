@@ -4,11 +4,12 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Database = use('Database')
 const Participante = use('App/Models/Participante')
 
 class ParticipanteController {
   async index () {
-    const participantes = await Participante.all()
+    const participantes = await Participante.query().with('user').with('bolao').fetch()
 
     return participantes
   }
@@ -28,7 +29,8 @@ class ParticipanteController {
   }
 
   async show ({ params }) {
-    const participante = await Participante.findOrFail(params.id)
+    const participante = await Participante.query()
+    .with('user').with('bolao').where('id', params.id).firstOrFail()
 
     return participante
   }

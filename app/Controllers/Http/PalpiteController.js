@@ -8,7 +8,9 @@ const Palpite = use('App/Models/Palpite')
 
 class PalpiteController {
   async index () {
-    const palpites = await Palpite.all()
+    const palpites = await Palpite.query().with('jogo', builder => {
+      builder.with('mandante').with('visitante')
+    }).with('user').fetch()
 
     return palpites
   }
@@ -28,7 +30,9 @@ class PalpiteController {
   }
 
   async show ({ params }) {
-    const palpite = await Palpite.findOrFail(params.id)
+    const palpite = await Palpite.query().with('jogo', builder => {
+      builder.with('mandante').with('visitante')
+    }).with('user').where('id', params.id).firstOrFail()
 
     return palpite
   }
