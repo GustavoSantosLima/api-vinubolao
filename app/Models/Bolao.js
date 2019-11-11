@@ -4,11 +4,11 @@
 const Model = use('Model')
 
 class Bolao extends Model {
-  user () {
+  user() {
     return this.belongsTo('App/Models/User')
   }
 
-  campeonato () {
+  campeonato() {
     return this.belongsTo('App/Models/Campeonato')
   }
 }

@@ -7,23 +7,27 @@
 const Jogo = use('App/Models/Jogo')
 
 class JogoController {
-  async index () {
-    const jogos = await Jogo.query().with('bolao')
-    .with('campeonato').with('mandante').with('visitante').fetch()
+  async index() {
+    const jogos = await Jogo.query()
+      .with('bolao')
+      .with('campeonato')
+      .with('mandante')
+      .with('visitante')
+      .fetch()
 
     return jogos
   }
 
-  async store ({ request }) {
+  async store({ request }) {
     const data = request.only([
-      "campeonato_id",
-      "bolao_id",
-      "rodada",
-      "inicio",
-      "timecasa_id",
-      "placar_casa",
-      "placar_fora",
-      "timefora_id"
+      'campeonato_id',
+      'bolao_id',
+      'rodada',
+      'inicio',
+      'timecasa_id',
+      'placar_casa',
+      'placar_fora',
+      'timefora_id'
     ])
 
     const jogo = await Jogo.create(data)
@@ -31,14 +35,19 @@ class JogoController {
     return jogo
   }
 
-  async show ({ params }) {
-    const jogo = await Jogo.query().with('bolao').with('campeonato')
-    .with('mandante').with('visitante').where('id', params.id).firstOrFail()
+  async show({ params }) {
+    const jogo = await Jogo.query()
+      .with('bolao')
+      .with('campeonato')
+      .with('mandante')
+      .with('visitante')
+      .where('id', params.id)
+      .firstOrFail()
 
     return jogo
   }
 
-  async update ({ params, request }) {
+  async update({ params, request }) {
     const jogo = await Jogo.findOrFail(params.id)
 
     jogo.campeonato_id = request.input('campeonato_id', jogo.campeonato_id)
@@ -54,7 +63,7 @@ class JogoController {
     return jogo
   }
 
-  async destroy ({ params }) {
+  async destroy({ params }) {
     const jogo = await Jogo.findOrFail(params.id)
 
     return jogo.delete()

@@ -4,30 +4,30 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const User = use("App/Models/User");
+const User = use('App/Models/User')
 
 class UserController {
-  async index () {
+  async index() {
     const users = await User.all()
 
     return users
   }
 
-  async store ({ request }) {
-    const data = request.only(["name", "username", "email", "password"]);
+  async store({ request }) {
+    const data = request.only(['name', 'username', 'email', 'password'])
 
-    const user = await User.create(data);
+    const user = await User.create(data)
 
-    return user;
+    return user
   }
 
-  async show ({ params }) {
+  async show({ params }) {
     const user = await User.findOrFail(params.id)
 
     return user
   }
 
-  async update ({ params, request }) {
+  async update({ params, request }) {
     const user = await User.findOrFail(params.id)
 
     user.name = request.input('name', user.name)
@@ -40,7 +40,7 @@ class UserController {
     return user
   }
 
-  async destroy ({ params, request, response }) {
+  async destroy({ params, request, response }) {
     const user = await User.findOrFail(params.id)
 
     user.delete()

@@ -1,13 +1,13 @@
-"use strict";
+'use strict'
 
 class AuthController {
   async authenticate({ request, auth }) {
-    const { email, password } = request.all();
+    const { email, password } = request.all()
 
-    const token = await auth.attempt(email, password);
+    const token = await auth.attempt(email, password)
 
-    return token;
+    return token
   }
 }
 
-module.exports = AuthController;
+module.exports = AuthController

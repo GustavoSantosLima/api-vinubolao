@@ -4,11 +4,25 @@
 const Schema = use('Schema')
 
 class PalpitesSchema extends Schema {
-  up () {
-    this.create('palpites', (table) => {
+  up() {
+    this.create('palpites', table => {
       table.increments()
-      table.integer("jogo_id").unsigned().notNullable().references('id').inTable("jogos").onUpdate("CASCADE").onDelete("CASCADE")
-      table.integer("user_id").unsigned().notNullable().references('id').inTable("users").onUpdate("CASCADE").onDelete("CASCADE")
+      table
+        .integer('jogo_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('jogos')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
       table.integer('palpite_casa').nullable()
       table.integer('palpite_fora').nullable()
       table.timestamp('horario').notNullable()
@@ -16,7 +30,7 @@ class PalpitesSchema extends Schema {
     })
   }
 
-  down () {
+  down() {
     this.drop('palpites')
   }
 }

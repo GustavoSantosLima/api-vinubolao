@@ -7,21 +7,24 @@
 const Palpite = use('App/Models/Palpite')
 
 class PalpiteController {
-  async index () {
-    const palpites = await Palpite.query().with('jogo', builder => {
-      builder.with('mandante').with('visitante')
-    }).with('user').fetch()
+  async index() {
+    const palpites = await Palpite.query()
+      .with('jogo', builder => {
+        builder.with('mandante').with('visitante')
+      })
+      .with('user')
+      .fetch()
 
     return palpites
   }
 
-  async store ({ request }) {
+  async store({ request }) {
     const data = request.only([
-      "jogo_id",
-      "user_id",
-      "palpite_casa",
-      "palpite_fora",
-      "horario"
+      'jogo_id',
+      'user_id',
+      'palpite_casa',
+      'palpite_fora',
+      'horario'
     ])
 
     const palpite = await Palpite.create(data)
@@ -29,15 +32,19 @@ class PalpiteController {
     return palpite
   }
 
-  async show ({ params }) {
-    const palpite = await Palpite.query().with('jogo', builder => {
-      builder.with('mandante').with('visitante')
-    }).with('user').where('id', params.id).firstOrFail()
+  async show({ params }) {
+    const palpite = await Palpite.query()
+      .with('jogo', builder => {
+        builder.with('mandante').with('visitante')
+      })
+      .with('user')
+      .where('id', params.id)
+      .firstOrFail()
 
     return palpite
   }
 
-  async update ({ params, request }) {
+  async update({ params, request }) {
     const palpite = await Palpite.findOrFail(params.id)
 
     palpite.jogo_id = request.input('jogo_id', palpite.jogo_id)
@@ -50,7 +57,7 @@ class PalpiteController {
     return palpite
   }
 
-  async destroy ({ params }) {
+  async destroy({ params }) {
     const palpite = await Palpite.findOrFail(params.id)
 
     return palpite.delete()

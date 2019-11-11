@@ -7,25 +7,25 @@
 const Campeonato = use('App/Models/Campeonato')
 
 class CampeonatoController {
-  async index () {
+  async index() {
     const campeonatos = await Campeonato.all()
 
     return campeonatos
   }
 
-  async store ({ request }) {
+  async store({ request }) {
     const data = request.only([
-      "nome",
-      "nome_completo",
-      "qtd_times",
-      "qtd_rodadas",
-      "rodada",
-      "temporada",
-      "serie",
-      "estado",
-      "pais",
-      "inicio",
-      "termino"
+      'nome',
+      'nome_completo',
+      'qtd_times',
+      'qtd_rodadas',
+      'rodada',
+      'temporada',
+      'serie',
+      'estado',
+      'pais',
+      'inicio',
+      'termino'
     ])
 
     const campeonato = await Campeonato.create(data)
@@ -33,19 +33,25 @@ class CampeonatoController {
     return campeonato
   }
 
-  async show ({ params }) {
+  async show({ params }) {
     const campeonato = await Campeonato.findOrFail(params.id)
 
     return campeonato
   }
 
-  async update ({ params, request }) {
+  async update({ params, request }) {
     const campeonato = await Campeonato.findOrFail(params.id)
 
     campeonato.nome = request.input('nome', campeonato.nome)
-    campeonato.nome_completo = request.input('nome_completo', campeonato.nome_completo)
+    campeonato.nome_completo = request.input(
+      'nome_completo',
+      campeonato.nome_completo
+    )
     campeonato.qtd_times = request.input('qtd_times', campeonato.qtd_times)
-    campeonato.qtd_rodadas = request.input('qtd_rodadas', campeonato.qtd_rodadas)
+    campeonato.qtd_rodadas = request.input(
+      'qtd_rodadas',
+      campeonato.qtd_rodadas
+    )
     campeonato.rodada = request.input('rodada', campeonato.rodada)
     campeonato.temporada = request.input('temporada', campeonato.temporada)
     campeonato.serie = request.input('serie', campeonato.serie)
@@ -58,7 +64,7 @@ class CampeonatoController {
     return campeonato
   }
 
-  async destroy ({ params }) {
+  async destroy({ params }) {
     const campeonato = await Campeonato.findOrFail(params.id)
 
     return campeonato.delete()
