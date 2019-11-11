@@ -4,6 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const DB = use('Database')
 const Bolao = use('App/Models/Bolao')
 
 class BolaoController {
@@ -11,9 +12,63 @@ class BolaoController {
     const boloes = await Bolao.query()
       .with('user')
       .with('campeonato')
-      .fetchOrFail()
+      .fetch()
 
     return boloes
+  }
+
+  async classificacao({ params }) {
+    const data = await DB.raw(`
+    SELECT u.name,
+      SUM(
+        CASE
+          WHEN (j.placar_casa = p.palpite_casa) AND (j.placar_fora = p.palpite_fora) THEN 1
+          WHEN (j.placar_casa - j.placar_fora = 0) AND (p.palpite_casa - p.palpite_fora = 0) THEN 0
+          WHEN (j.placar_casa - j.placar_fora > 0) AND (p.palpite_casa - p.palpite_fora > 0) THEN 0
+          WHEN (j.placar_casa - j.placar_fora < 0) AND (p.palpite_casa - p.palpite_fora < 0) THEN 0
+          ELSE 0
+        END
+      ) AS placarexato,
+      SUM(
+        CASE
+          WHEN (j.placar_casa = p.palpite_casa) AND (j.placar_fora = p.palpite_fora) THEN 0
+          WHEN (j.placar_casa - j.placar_fora = 0) AND (p.palpite_casa - p.palpite_fora = 0) THEN 1
+          WHEN (j.placar_casa - j.placar_fora > 0) AND (p.palpite_casa - p.palpite_fora > 0) THEN 1
+          WHEN (j.placar_casa - j.placar_fora < 0) AND (p.palpite_casa - p.palpite_fora < 0) THEN 1
+          ELSE 0
+        END
+      ) AS placarvencedor,
+      SUM(
+      CASE
+        WHEN (j.rodada >= b.rodada_dobro) THEN
+          CASE
+            WHEN (j.placar_casa = p.palpite_casa) AND (j.placar_fora = p.palpite_fora) THEN b.placar_exato * 2
+            WHEN (j.placar_casa - j.placar_fora = 0) AND (p.palpite_casa - p.palpite_fora = 0) THEN b.placar_vencedor * 2
+            WHEN (j.placar_casa - j.placar_fora > 0) AND (p.palpite_casa - p.palpite_fora > 0) THEN b.placar_vencedor * 2
+            WHEN (j.placar_casa - j.placar_fora < 0) AND (p.palpite_casa - p.palpite_fora < 0) THEN b.placar_vencedor * 2
+            ELSE 0
+          END
+        ELSE
+          CASE
+            WHEN (j.placar_casa = p.palpite_casa) AND (j.placar_fora = p.palpite_fora) THEN b.placar_exato
+            WHEN (j.placar_casa - j.placar_fora = 0) AND (p.palpite_casa - p.palpite_fora = 0) THEN b.placar_vencedor
+            WHEN (j.placar_casa - j.placar_fora > 0) AND (p.palpite_casa - p.palpite_fora > 0) THEN b.placar_vencedor
+            WHEN (j.placar_casa - j.placar_fora < 0) AND (p.palpite_casa - p.palpite_fora < 0) THEN b.placar_vencedor
+            ELSE 0
+          END
+        END
+      ) AS pontosganhos
+    FROM palpites AS p
+    JOIN jogos AS j ON j.id = p.jogo_id
+    JOIN users AS u ON u.id = p.user_id
+    JOIN bolaos AS b ON b.id = j.bolao_id
+    WHERE b.ativo = 1
+    AND b.campeonato_id = ${params.id}
+    ${params.rodada ? `AND j.rodada = ${params.rodada}` : ''}
+    GROUP BY u.name
+    ORDER BY pontosganhos DESC, placarexato DESC, placarvencedor DESC, name`)
+
+    return data[0]
   }
 
   async store({ request }) {
