@@ -8,7 +8,7 @@ const Campeonato = use('App/Models/Campeonato')
 
 class CampeonatoController {
   async index() {
-    const campeonatos = await Campeonato.all()
+    const campeonatos = await Campeonato.paginate(1, 10)
 
     return campeonatos
   }

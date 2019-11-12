@@ -8,7 +8,7 @@ const Time = use('App/Models/Time')
 
 class TimeController {
   async index() {
-    const times = await Time.all()
+    const times = await Time.paginate(1, 10)
 
     return times
   }

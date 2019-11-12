@@ -12,7 +12,7 @@ class BolaoController {
     const boloes = await Bolao.query()
       .with('user')
       .with('campeonato')
-      .fetch()
+      .paginate(1, 10)
 
     return boloes
   }

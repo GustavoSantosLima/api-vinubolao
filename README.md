@@ -1,28 +1,27 @@
-# Adonis API application
+# API VinúBolão
 
-This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
+API do projeto VinúBolão
 
-1. Bodyparser
-2. Authentication
-3. CORS
-4. Lucid ORM
-5. Migrations and seeds
-
-## Setup
-
-Use the adonis command to install the blueprint
+## Executando o projeto
 
 ```bash
-adonis new yardstick --api-only
+npm install or yarn
 ```
 
-or manually clone the repo and then run `npm install`.
+Copiar a `.env.example` para `.env`
 
+```bash
+cp .env.example .env
+```
 
-### Migrations
+Para gerar a `application:key`
 
-Run the following command to run startup migrations.
+```bash
+adonis key:generate
+```
 
-```js
+Para rodar todas as migrações
+
+```bash
 adonis migration:run
 ```

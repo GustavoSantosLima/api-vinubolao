@@ -11,7 +11,7 @@ class ParticipanteController {
     const participantes = await Participante.query()
       .with('user')
       .with('bolao')
-      .fetch()
+      .paginate(1, 10)
 
     return participantes
   }

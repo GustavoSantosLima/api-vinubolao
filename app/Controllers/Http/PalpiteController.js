@@ -13,7 +13,7 @@ class PalpiteController {
         builder.with('mandante').with('visitante')
       })
       .with('user')
-      .fetch()
+      .paginate(1, 10)
 
     return palpites
   }

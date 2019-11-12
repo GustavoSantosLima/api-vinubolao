@@ -13,6 +13,17 @@ class JogoController {
       .with('campeonato')
       .with('mandante')
       .with('visitante')
+      .paginate(1, 10)
+
+    return jogos
+  }
+
+  async getByCampeonato({ params }) {
+    const jogos = await Jogo.query()
+      .with('campeonato')
+      .with('mandante')
+      .with('visitante')
+      .where({ campeonato_id: params.id, rodada: params.rodada })
       .fetch()
 
     return jogos

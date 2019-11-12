@@ -8,7 +8,7 @@ const User = use('App/Models/User')
 
 class UserController {
   async index() {
-    const users = await User.all()
+    const users = await User.paginate(1, 10)
 
     return users
   }

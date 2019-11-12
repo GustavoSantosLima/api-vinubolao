@@ -15,5 +15,7 @@ Route.group(() => {
   Route.resource('campeonatos', 'CampeonatoController').apiOnly()
   Route.resource('participantes', 'ParticipanteController').apiOnly()
 
+  Route.get('jogos/campeonato/:id/:rodada?', 'JogoController.getByCampeonato')
+
   Route.get('classificacao/:id/:rodada?', 'BolaoController.classificacao')
 }).middleware('auth')
