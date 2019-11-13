@@ -8,14 +8,19 @@ Route.post('/authenticate', 'AuthController.authenticate')
 
 Route.group(() => {
   Route.resource('users', 'UserController').apiOnly()
-  Route.resource('times', 'TimeController').apiOnly()
-  Route.resource('jogos', 'JogoController').apiOnly()
-  Route.resource('bolaos', 'BolaoController').apiOnly()
-  Route.resource('palpites', 'PalpiteController').apiOnly()
-  Route.resource('campeonatos', 'CampeonatoController').apiOnly()
-  Route.resource('participantes', 'ParticipanteController').apiOnly()
 
+  Route.resource('times', 'TimeController').apiOnly()
+
+  Route.resource('jogos', 'JogoController').apiOnly()
   Route.get('jogos/campeonato/:id/:rodada?', 'JogoController.getByCampeonato')
+
+  Route.resource('bolaos', 'BolaoController').apiOnly()
+
+  Route.resource('palpites', 'PalpiteController').apiOnly()
+
+  Route.resource('campeonatos', 'CampeonatoController').apiOnly()
+
+  Route.resource('participantes', 'ParticipanteController').apiOnly()
 
   Route.get('classificacao/:id/:rodada?', 'BolaoController.classificacao')
 }).middleware('auth')
