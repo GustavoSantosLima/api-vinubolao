@@ -3,9 +3,9 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class BolaosSchema extends Schema {
+class PoolsSchema extends Schema {
   up() {
-    this.create('bolaos', table => {
+    this.create('pools', table => {
       table.increments()
       table
         .integer('user_id')
@@ -16,30 +16,30 @@ class BolaosSchema extends Schema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
-        .integer('campeonato_id')
+        .integer('championship_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('campeonatos')
+        .inTable('championships')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.string('nome', 50).notNullable()
-      table.text('descricao', 50).nullable()
-      table.integer('placar_exato').nullable()
-      table.integer('placar_vencedor').nullable()
-      table.integer('rodada_dobro').nullable()
+      table.string('name', 50).notNullable()
+      table.text('description', 50).nullable()
+      table.integer('exact_score').nullable()
+      table.integer('winning_score').nullable()
+      table.integer('double_round').nullable()
       table
-        .boolean('ativo')
+        .boolean('active')
         .notNullable()
         .default(0)
-      table.date('inicio').notNullable()
+      table.date('starts').notNullable()
       table.timestamps()
     })
   }
 
   down() {
-    this.drop('bolaos')
+    this.drop('pools')
   }
 }
 
-module.exports = BolaosSchema
+module.exports = PoolsSchema

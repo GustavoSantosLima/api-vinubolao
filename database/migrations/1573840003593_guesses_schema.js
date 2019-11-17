@@ -3,16 +3,16 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class PalpitesSchema extends Schema {
+class GuessesSchema extends Schema {
   up() {
-    this.create('palpites', table => {
+    this.create('guesses', table => {
       table.increments()
       table
-        .integer('jogo_id')
+        .integer('match_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('jogos')
+        .inTable('matches')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
@@ -23,16 +23,15 @@ class PalpitesSchema extends Schema {
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.integer('palpite_casa').nullable()
-      table.integer('palpite_fora').nullable()
-      table.timestamp('horario').notNullable()
+      table.integer('home_guess').nullable()
+      table.integer('visitor_guess').nullable()
       table.timestamps()
     })
   }
 
   down() {
-    this.drop('palpites')
+    this.drop('guesses')
   }
 }
 
-module.exports = PalpitesSchema
+module.exports = GuessesSchema

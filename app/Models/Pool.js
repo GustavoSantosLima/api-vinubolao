@@ -3,14 +3,14 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
-class Participante extends Model {
-  user () {
+class Pool extends Model {
+  user() {
     return this.belongsTo('App/Models/User')
   }
 
-  bolao () {
-    return this.belongsTo('App/Models/Bolao')
+  championship() {
+    return this.belongsTo('App/Models/Championship')
   }
 }
 
-module.exports = Participante
+module.exports = Pool

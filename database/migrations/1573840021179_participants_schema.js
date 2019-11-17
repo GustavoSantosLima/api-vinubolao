@@ -3,9 +3,9 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class ParticipantesSchema extends Schema {
+class ParticipantsSchema extends Schema {
   up() {
-    this.create('participantes', table => {
+    this.create('participants', table => {
       table.increments()
       table
         .integer('user_id')
@@ -16,23 +16,23 @@ class ParticipantesSchema extends Schema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
-        .integer('bolao_id')
+        .integer('pool_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('bolaos')
+        .inTable('pools')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
-        .integer('pontosganhos')
+        .integer('points')
         .nullable()
         .default(0)
       table
-        .integer('placarexato')
+        .integer('exactscores')
         .nullable()
         .default(0)
       table
-        .integer('placarvencedor')
+        .integer('winningscores')
         .nullable()
         .default(0)
       table.timestamps()
@@ -40,8 +40,8 @@ class ParticipantesSchema extends Schema {
   }
 
   down() {
-    this.drop('participantes')
+    this.drop('participants')
   }
 }
 
-module.exports = ParticipantesSchema
+module.exports = ParticipantsSchema

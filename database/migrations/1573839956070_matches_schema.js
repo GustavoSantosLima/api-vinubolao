@@ -3,44 +3,44 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class JogosSchema extends Schema {
+class MatchesSchema extends Schema {
   up() {
-    this.create('jogos', table => {
+    this.create('matches', table => {
       table.increments()
       table
-        .integer('campeonato_id')
+        .integer('championship_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('campeonatos')
+        .inTable('championships')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
-        .integer('bolao_id')
+        .integer('pool_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('bolaos')
+        .inTable('pools')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.integer('rodada').notNullable()
-      table.date('inicio').notNullable()
+      table.integer('round').notNullable()
+      table.date('match_time').notNullable()
       table
-        .integer('timecasa_id')
+        .integer('home_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('times')
+        .inTable('teams')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.integer('placar_casa').nullable()
-      table.integer('placar_fora').nullable()
+      table.integer('home_score').nullable()
+      table.integer('visitor_score').nullable()
       table
-        .integer('timefora_id')
+        .integer('visitor_id')
         .unsigned()
         .notNullable()
         .references('id')
-        .inTable('times')
+        .inTable('teams')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table.timestamps()
@@ -48,8 +48,8 @@ class JogosSchema extends Schema {
   }
 
   down() {
-    this.drop('jogos')
+    this.drop('matches')
   }
 }
 
-module.exports = JogosSchema
+module.exports = MatchesSchema
